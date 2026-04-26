@@ -79,9 +79,9 @@ public partial class Form1 : Form
 
     private void RefreshToolStripMenuItem_Click(object sender, EventArgs e) => RefreshAll();
 
-    private void ListView1_SelectedIndexChanged(object sender, EventArgs e)
+    private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
     {
-        if (listView1.SelectedItems is not [{ SubItems: [{ Text: var character }, ..] }])
+        if (listView1.HitTest(e.X, e.Y).SubItem is not { Text: var character })
         {
             return;
         }

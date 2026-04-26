@@ -84,7 +84,7 @@ partial class Form1
         listView1.UseCompatibleStateImageBehavior = false;
         listView1.View = View.Details;
         listView1.ColumnClick += ListView1_ColumnClick;
-        listView1.SelectedIndexChanged += ListView1_SelectedIndexChanged;
+        listView1.MouseDoubleClick += ListView1_MouseDoubleClick;
         // 
         // charHeader
         // 
