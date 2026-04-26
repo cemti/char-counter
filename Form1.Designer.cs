@@ -31,8 +31,11 @@ partial class Form1
         menuStrip1 = new MenuStrip();
         fileToolStripMenuItem = new ToolStripMenuItem();
         openToolStripMenuItem = new ToolStripMenuItem();
-        listBox1 = new ListBox();
         refreshToolStripMenuItem = new ToolStripMenuItem();
+        listView1 = new ListView();
+        charHeader = new ColumnHeader();
+        hexHeader = new ColumnHeader();
+        countHeader = new ColumnHeader();
         menuStrip1.SuspendLayout();
         SuspendLayout();
         // 
@@ -55,33 +58,53 @@ partial class Form1
         // openToolStripMenuItem
         // 
         openToolStripMenuItem.Name = "openToolStripMenuItem";
-        openToolStripMenuItem.Size = new Size(103, 22);
+        openToolStripMenuItem.Size = new Size(113, 22);
         openToolStripMenuItem.Text = "Open";
         openToolStripMenuItem.Click += OpenToolStripMenuItem_Click;
-        // 
-        // listBox1
-        // 
-        listBox1.Dock = DockStyle.Fill;
-        listBox1.FormattingEnabled = true;
-        listBox1.Location = new Point(0, 24);
-        listBox1.Name = "listBox1";
-        listBox1.Size = new Size(800, 426);
-        listBox1.TabIndex = 1;
-        listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
         // 
         // refreshToolStripMenuItem
         // 
         refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-        refreshToolStripMenuItem.Size = new Size(180, 22);
+        refreshToolStripMenuItem.Size = new Size(113, 22);
         refreshToolStripMenuItem.Text = "Refresh";
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItem_Click;
+        // 
+        // listView1
+        // 
+        listView1.Columns.AddRange(new ColumnHeader[] { charHeader, hexHeader, countHeader });
+        listView1.Dock = DockStyle.Fill;
+        listView1.FullRowSelect = true;
+        listView1.GridLines = true;
+        listView1.Location = new Point(0, 24);
+        listView1.MultiSelect = false;
+        listView1.Name = "listView1";
+        listView1.Size = new Size(800, 426);
+        listView1.TabIndex = 1;
+        listView1.UseCompatibleStateImageBehavior = false;
+        listView1.View = View.Details;
+        listView1.SelectedIndexChanged += ListView1_SelectedIndexChanged;
+        // 
+        // charHeader
+        // 
+        charHeader.Text = "Character";
+        charHeader.Width = 100;
+        // 
+        // hexHeader
+        // 
+        hexHeader.Text = "Hex value";
+        hexHeader.Width = 100;
+        // 
+        // countHeader
+        // 
+        countHeader.Text = "Count";
+        countHeader.Width = 100;
         // 
         // Form1
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(800, 450);
-        Controls.Add(listBox1);
+        Controls.Add(listView1);
         Controls.Add(menuStrip1);
         MainMenuStrip = menuStrip1;
         Name = "Form1";
@@ -97,6 +120,9 @@ partial class Form1
     private MenuStrip menuStrip1;
     private ToolStripMenuItem fileToolStripMenuItem;
     private ToolStripMenuItem openToolStripMenuItem;
-    private ListBox listBox1;
     private ToolStripMenuItem refreshToolStripMenuItem;
+    private ListView listView1;
+    private ColumnHeader charHeader;
+    private ColumnHeader hexHeader;
+    private ColumnHeader countHeader;
 }

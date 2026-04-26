@@ -36,11 +36,12 @@ public partial class Form1 : Form
 
     private void RefreshListBox()
     {
-        listBox1.Items.Clear();
+        listView1.Items.Clear();
 
         foreach (var (key, value) in _counts)
         {
-            _ = listBox1.Items.Add($"{key} ({(int)key:x}) -> {value}");
+            string[] row = [key.ToString(), ((int)key).ToString("x"), value.ToString()];
+            _ = listView1.Items.Add(new ListViewItem(row));
         }
     }
 
@@ -68,16 +69,16 @@ public partial class Form1 : Form
         RefreshAll();
     }
 
-    private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
+    private void RefreshToolStripMenuItem_Click(object sender, EventArgs e) => RefreshAll();
+
+    private void ListView1_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (listBox1.SelectedItem is not string item)
+        if (listView1.SelectedItems is not [{ SubItems: [{ Text: var character }, ..] }])
         {
             return;
         }
 
-        Clipboard.SetText(item[..1]);
+        Clipboard.SetText(character);
         SystemSounds.Beep.Play();
     }
-
-    private void RefreshToolStripMenuItem_Click(object sender, EventArgs e) => RefreshAll();
 }
