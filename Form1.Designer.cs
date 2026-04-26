@@ -32,6 +32,7 @@ partial class Form1
         fileToolStripMenuItem = new ToolStripMenuItem();
         openToolStripMenuItem = new ToolStripMenuItem();
         listBox1 = new ListBox();
+        refreshToolStripMenuItem = new ToolStripMenuItem();
         menuStrip1.SuspendLayout();
         SuspendLayout();
         // 
@@ -46,7 +47,7 @@ partial class Form1
         // 
         // fileToolStripMenuItem
         // 
-        fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem });
+        fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem, refreshToolStripMenuItem });
         fileToolStripMenuItem.Name = "fileToolStripMenuItem";
         fileToolStripMenuItem.Size = new Size(37, 20);
         fileToolStripMenuItem.Text = "File";
@@ -67,6 +68,13 @@ partial class Form1
         listBox1.Size = new Size(800, 426);
         listBox1.TabIndex = 1;
         listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
+        // 
+        // refreshToolStripMenuItem
+        // 
+        refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+        refreshToolStripMenuItem.Size = new Size(180, 22);
+        refreshToolStripMenuItem.Text = "Refresh";
+        refreshToolStripMenuItem.Click += RefreshToolStripMenuItem_Click;
         // 
         // Form1
         // 
@@ -90,4 +98,5 @@ partial class Form1
     private ToolStripMenuItem fileToolStripMenuItem;
     private ToolStripMenuItem openToolStripMenuItem;
     private ListBox listBox1;
+    private ToolStripMenuItem refreshToolStripMenuItem;
 }
