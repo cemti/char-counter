@@ -8,9 +8,7 @@ internal class RowComparer : IComparer
     public bool ReverseOrder { get; set; }
     private IComparable GetTag(object? x) => (IComparable)((ListViewItem)x!).SubItems[Index].Tag!;
 
-    public int Compare(object? x, object? y)
-    {
-        var result = GetTag(x).CompareTo(GetTag(y));
-        return ReverseOrder ? 1 - result : result;
-    }
+    public int Compare(object? x, object? y) => ReverseOrder
+        ? GetTag(y).CompareTo(GetTag(x))
+        : GetTag(x).CompareTo(GetTag(y));
 }
