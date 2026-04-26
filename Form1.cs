@@ -4,7 +4,7 @@ namespace CharCounter;
 
 public partial class Form1 : Form
 {
-    private readonly SortedDictionary<char, int> _counts = [];
+    private readonly Dictionary<char, int> _counts = [];
     private readonly RowComparer _rowComparer = new();
     private string[] _fileNames = [];
 
