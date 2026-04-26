@@ -77,26 +77,22 @@ public partial class Form1 : Form
             Multiselect = true
         };
 
-        if (dialog.ShowDialog() != DialogResult.OK)
+        if (dialog.ShowDialog() == DialogResult.OK)
         {
-            return;
+            _fileNames = dialog.FileNames;
+            RefreshAll();
         }
-
-        _fileNames = dialog.FileNames;
-        RefreshAll();
     }
 
     private void RefreshToolStripMenuItem_Click(object sender, EventArgs e) => RefreshAll();
 
     private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
     {
-        if (listView1.HitTest(e.X, e.Y).SubItem is not { Text: var character })
+        if (listView1.HitTest(e.X, e.Y).SubItem is { Text: var character })
         {
-            return;
+            Clipboard.SetText(character);
+            SystemSounds.Beep.Play();
         }
-
-        Clipboard.SetText(character);
-        SystemSounds.Beep.Play();
     }
 
     private void ListView1_ColumnClick(object sender, ColumnClickEventArgs e)
