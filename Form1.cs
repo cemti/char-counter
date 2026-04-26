@@ -5,7 +5,7 @@ namespace CharCounter;
 public partial class Form1 : Form
 {
     private readonly SortedDictionary<char, int> _counts = [];
-    private string _fileName = "";
+    private string[] _fileNames = [];
 
     public Form1()
     {
@@ -14,20 +14,23 @@ public partial class Form1 : Form
 
     private void ReadFile()
     {
-        using StreamReader reader = new(_fileName);
-        _counts.Clear();
-
-        while (reader.Read() is not -1 and var result)
+        foreach (var fileName in _fileNames)
         {
-            var character = (char)result;
+            using StreamReader reader = new(fileName);
+            _counts.Clear();
 
-            if (_counts.TryGetValue(character, out int value))
+            while (reader.Read() is not -1 and var result)
             {
-                _counts[character] = value + 1;
-                continue;
-            }
+                var character = (char)result;
 
-            _counts.Add(character, 1);
+                if (_counts.TryGetValue(character, out int value))
+                {
+                    _counts[character] = value + 1;
+                    continue;
+                }
+
+                _counts.Add(character, 1);
+            }
         }
     }
 
@@ -53,6 +56,7 @@ public partial class Form1 : Form
         {
             Title = "Open file",
             CheckFileExists = true,
+            Multiselect = true
         };
 
         if (dialog.ShowDialog() != DialogResult.OK)
@@ -60,7 +64,7 @@ public partial class Form1 : Form
             return;
         }
 
-        _fileName = dialog.FileName;
+        _fileNames = dialog.FileNames;
         RefreshAll();
     }
 
