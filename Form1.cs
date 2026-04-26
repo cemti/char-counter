@@ -4,7 +4,7 @@ namespace CharCounter;
 
 public partial class Form1 : Form
 {
-    private readonly Dictionary<char, int> _counts = [];
+    private readonly Dictionary<char, (int Count, HashSet<string> FileNames)> _counts = [];
     private readonly RowComparer _rowComparer = new();
     private string[] _fileNames = [];
 
@@ -16,22 +16,25 @@ public partial class Form1 : Form
 
     private void ReadFile()
     {
+        _counts.Clear();
+
         foreach (var fileName in _fileNames)
         {
             using StreamReader reader = new(fileName);
-            _counts.Clear();
 
             while (reader.Read() is not -1 and var result)
             {
                 var character = (char)result;
 
-                if (_counts.TryGetValue(character, out int value))
+                if (!_counts.TryGetValue(character, out var pair))
                 {
-                    _counts[character] = value + 1;
+                    _counts.Add(character, (1, [fileName]));
                     continue;
                 }
 
-                _counts.Add(character, 1);
+                ++pair.Count;
+                _ = pair.FileNames.Add(fileName);
+                _counts[character] = pair;
             }
         }
     }
@@ -46,10 +49,16 @@ public partial class Form1 : Form
             [
                 new() { Text = key.ToString(), Tag = key.ToString() },
                 new() { Text = ((int)key).ToString("x"), Tag = key },
-                new() { Text = value.ToString(), Tag = value }
+                new() { Text = value.Count.ToString(), Tag = value.Count },
+                new() { Text = string.Join(", ", value.FileNames.Select(Path.GetFileName)), Tag = value.FileNames.Count }
             ];
 
             _ = listView1.Items.Add(new ListViewItem(row, 0));
+        }
+
+        foreach (var column in listView1.Columns.Cast<ColumnHeader>())
+        {
+            column.Width = -2;
         }
     }
 

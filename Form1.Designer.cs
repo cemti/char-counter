@@ -36,6 +36,7 @@ partial class Form1
         charHeader = new ColumnHeader();
         hexHeader = new ColumnHeader();
         countHeader = new ColumnHeader();
+        fileNameHeader = new ColumnHeader();
         menuStrip1.SuspendLayout();
         SuspendLayout();
         // 
@@ -71,7 +72,7 @@ partial class Form1
         // 
         // listView1
         // 
-        listView1.Columns.AddRange(new ColumnHeader[] { charHeader, hexHeader, countHeader });
+        listView1.Columns.AddRange(new ColumnHeader[] { charHeader, hexHeader, countHeader, fileNameHeader });
         listView1.Dock = DockStyle.Fill;
         listView1.FullRowSelect = true;
         listView1.GridLines = true;
@@ -89,17 +90,22 @@ partial class Form1
         // charHeader
         // 
         charHeader.Text = "Character";
-        charHeader.Width = 100;
+        charHeader.Width = 63;
         // 
         // hexHeader
         // 
         hexHeader.Text = "Hex value";
-        hexHeader.Width = 100;
+        hexHeader.Width = 63;
         // 
         // countHeader
         // 
         countHeader.Text = "Count";
-        countHeader.Width = 100;
+        countHeader.Width = 45;
+        // 
+        // fileNameHeader
+        // 
+        fileNameHeader.Text = "Files";
+        fileNameHeader.Width = 625;
         // 
         // Form1
         // 
@@ -127,4 +133,5 @@ partial class Form1
     private ColumnHeader charHeader;
     private ColumnHeader hexHeader;
     private ColumnHeader countHeader;
+    private ColumnHeader fileNameHeader;
 }
