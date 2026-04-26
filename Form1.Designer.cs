@@ -79,9 +79,11 @@ partial class Form1
         listView1.MultiSelect = false;
         listView1.Name = "listView1";
         listView1.Size = new Size(800, 426);
+        listView1.Sorting = SortOrder.Ascending;
         listView1.TabIndex = 1;
         listView1.UseCompatibleStateImageBehavior = false;
         listView1.View = View.Details;
+        listView1.ColumnClick += ListView1_ColumnClick;
         listView1.SelectedIndexChanged += ListView1_SelectedIndexChanged;
         // 
         // charHeader

@@ -5,11 +5,13 @@ namespace CharCounter;
 public partial class Form1 : Form
 {
     private readonly SortedDictionary<char, int> _counts = [];
+    private readonly RowComparer _rowComparer = new();
     private string[] _fileNames = [];
 
     public Form1()
     {
         InitializeComponent();
+        listView1.ListViewItemSorter = _rowComparer;
     }
 
     private void ReadFile()
@@ -40,8 +42,14 @@ public partial class Form1 : Form
 
         foreach (var (key, value) in _counts)
         {
-            string[] row = [key.ToString(), ((int)key).ToString("x"), value.ToString()];
-            _ = listView1.Items.Add(new ListViewItem(row));
+            ListViewItem.ListViewSubItem[] row =
+            [
+                new() { Text = key.ToString(), Tag = key.ToString() },
+                new() { Text = ((int)key).ToString("x"), Tag = key },
+                new() { Text = value.ToString(), Tag = value }
+            ];
+
+            _ = listView1.Items.Add(new ListViewItem(row, 0));
         }
     }
 
@@ -80,5 +88,20 @@ public partial class Form1 : Form
 
         Clipboard.SetText(character);
         SystemSounds.Beep.Play();
+    }
+
+    private void ListView1_ColumnClick(object sender, ColumnClickEventArgs e)
+    {
+        if (_rowComparer.Index == e.Column)
+        {
+            _rowComparer.ReverseOrder ^= true;
+        }
+        else
+        {
+            _rowComparer.ReverseOrder = false;
+            _rowComparer.Index = e.Column;
+        }
+
+        listView1.Sort();
     }
 }
