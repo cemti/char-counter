@@ -1,4 +1,5 @@
 using System.Media;
+using System.Text;
 
 namespace CharCounter;
 
@@ -7,11 +8,34 @@ public partial class Form1 : Form
     private readonly Dictionary<char, (int Count, HashSet<string> FileNames)> _counts = [];
     private readonly RowComparer _rowComparer = new();
     private string[] _fileNames = [];
+    private int _clipboardCount;
 
     public Form1()
     {
         InitializeComponent();
         listView1.ListViewItemSorter = _rowComparer;
+    }
+
+    private string GetClipboardFileName() => $"<clipboard-{_clipboardCount}>";
+
+    private void ReadStream(string fileName, Stream stream)
+    {
+        using StreamReader reader = new(stream);
+
+        while (reader.Read() is not -1 and var result)
+        {
+            var character = (char)result;
+
+            if (!_counts.TryGetValue(character, out var pair))
+            {
+                _counts.Add(character, (1, [fileName]));
+                continue;
+            }
+
+            ++pair.Count;
+            _ = pair.FileNames.Add(fileName);
+            _counts[character] = pair;
+        }
     }
 
     private void ReadFile()
@@ -20,22 +44,8 @@ public partial class Form1 : Form
 
         foreach (var fileName in _fileNames)
         {
-            using StreamReader reader = new(fileName);
-
-            while (reader.Read() is not -1 and var result)
-            {
-                var character = (char)result;
-
-                if (!_counts.TryGetValue(character, out var pair))
-                {
-                    _counts.Add(character, (1, [fileName]));
-                    continue;
-                }
-
-                ++pair.Count;
-                _ = pair.FileNames.Add(fileName);
-                _counts[character] = pair;
-            }
+            using var stream = File.OpenRead(fileName);
+            ReadStream(fileName, stream);
         }
     }
 
@@ -62,8 +72,16 @@ public partial class Form1 : Form
         }
     }
 
+    private void ClearAll()
+    {
+        _clipboardCount = 0;
+        _counts.Clear();
+        listView1.Items.Clear();
+    }
+
     private void RefreshAll()
     {
+        ClearAll();
         ReadFile();
         RefreshListBox();
     }
@@ -85,6 +103,17 @@ public partial class Form1 : Form
     }
 
     private void RefreshToolStripMenuItem_Click(object sender, EventArgs e) => RefreshAll();
+
+    private void PasteTextFromClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        var array = Encoding.UTF8.GetBytes(Clipboard.GetText());
+        using MemoryStream stream = new(array);
+        ReadStream(GetClipboardFileName(), stream);
+        ++_clipboardCount;
+        RefreshListBox();
+    }
+
+    private void ClearListToolStripMenuItem_Click(object sender, EventArgs e) => ClearAll();
 
     private void ListView1_MouseDoubleClick(object sender, MouseEventArgs e)
     {

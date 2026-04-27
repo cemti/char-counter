@@ -32,6 +32,9 @@ partial class Form1
         fileToolStripMenuItem = new ToolStripMenuItem();
         openToolStripMenuItem = new ToolStripMenuItem();
         refreshToolStripMenuItem = new ToolStripMenuItem();
+        editToolStripMenuItem = new ToolStripMenuItem();
+        pasteTextFromClipboardToolStripMenuItem = new ToolStripMenuItem();
+        clearListToolStripMenuItem = new ToolStripMenuItem();
         listView1 = new ListView();
         charHeader = new ColumnHeader();
         hexHeader = new ColumnHeader();
@@ -42,7 +45,7 @@ partial class Form1
         // 
         // menuStrip1
         // 
-        menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
+        menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem });
         menuStrip1.Location = new Point(0, 0);
         menuStrip1.Name = "menuStrip1";
         menuStrip1.Size = new Size(800, 24);
@@ -69,6 +72,27 @@ partial class Form1
         refreshToolStripMenuItem.Size = new Size(113, 22);
         refreshToolStripMenuItem.Text = "Refresh";
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItem_Click;
+        // 
+        // editToolStripMenuItem
+        // 
+        editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { pasteTextFromClipboardToolStripMenuItem, clearListToolStripMenuItem });
+        editToolStripMenuItem.Name = "editToolStripMenuItem";
+        editToolStripMenuItem.Size = new Size(39, 20);
+        editToolStripMenuItem.Text = "Edit";
+        // 
+        // pasteTextFromClipboardToolStripMenuItem
+        // 
+        pasteTextFromClipboardToolStripMenuItem.Name = "pasteTextFromClipboardToolStripMenuItem";
+        pasteTextFromClipboardToolStripMenuItem.Size = new Size(206, 22);
+        pasteTextFromClipboardToolStripMenuItem.Text = "Paste text from clipboard";
+        pasteTextFromClipboardToolStripMenuItem.Click += PasteTextFromClipboardToolStripMenuItem_Click;
+        // 
+        // clearListToolStripMenuItem
+        // 
+        clearListToolStripMenuItem.Name = "clearListToolStripMenuItem";
+        clearListToolStripMenuItem.Size = new Size(206, 22);
+        clearListToolStripMenuItem.Text = "Clear list";
+        clearListToolStripMenuItem.Click += ClearListToolStripMenuItem_Click;
         // 
         // listView1
         // 
@@ -134,4 +158,7 @@ partial class Form1
     private ColumnHeader hexHeader;
     private ColumnHeader countHeader;
     private ColumnHeader fileNameHeader;
+    private ToolStripMenuItem editToolStripMenuItem;
+    private ToolStripMenuItem pasteTextFromClipboardToolStripMenuItem;
+    private ToolStripMenuItem clearListToolStripMenuItem;
 }
