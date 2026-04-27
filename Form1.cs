@@ -6,7 +6,7 @@ namespace CharCounter;
 
 public partial class Form1 : Form
 {
-    private readonly Dictionary<char, (int Count, List<string> FileNames)> _counts = [];
+    private readonly Dictionary<char, OrderedDictionary<string, int>> _counts = [];
     private readonly List<Input> _inputs = [];
     private readonly RowComparer _rowComparer = new();
 
@@ -24,20 +24,19 @@ public partial class Form1 : Form
         {
             var character = (char)result;
 
-            if (!_counts.TryGetValue(character, out var pair))
+            if (!_counts.TryGetValue(character, out var dictionary))
             {
-                _counts.Add(character, (1, [fileName]));
+                _counts.Add(character, new() { { fileName, 1 } });
                 continue;
             }
 
-            ++pair.Count;
-
-            if (!pair.FileNames.Contains(fileName))
+            if (dictionary.TryGetValue(fileName, out var count))
             {
-                pair.FileNames.Add(fileName);
+                dictionary[fileName] = count + 1;
+                continue;
             }
 
-            _counts[character] = pair;
+            dictionary.Add(fileName, 1);
         }
     }
 
@@ -72,13 +71,19 @@ public partial class Form1 : Form
 
         foreach (var (key, value) in _counts)
         {
-            ListViewItem.ListViewSubItem[] row =
-            [
+            var row = new ListViewItem.ListViewSubItem[]
+            {
                 new() { Text = key.ToString(), Tag = key.ToString() },
                 new() { Text = ((int)key).ToString("x"), Tag = key },
-                new() { Text = value.Count.ToString(), Tag = value.Count },
-                new() { Text = string.Join(", ", value.FileNames.Select(Path.GetFileName)), Tag = value.FileNames.Count }
-            ];
+                null!,
+                null!
+            };
+
+            var total = value.Values.Sum();
+            row[2] = new() { Text = total.ToString(), Tag = total };
+
+            var text = string.Join(", ", value.Select(x => $"{Path.GetFileName(x.Key)} ({x.Value})"));
+            row[3] = new() { Text = text, Tag = value.Count };
 
             _ = listView1.Items.Add(new ListViewItem(row, 0));
         }
