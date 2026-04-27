@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Media;
 using System.Text;
 
@@ -5,18 +6,15 @@ namespace CharCounter;
 
 public partial class Form1 : Form
 {
-    private readonly Dictionary<char, (int Count, HashSet<string> FileNames)> _counts = [];
+    private readonly Dictionary<char, (int Count, List<string> FileNames)> _counts = [];
+    private readonly List<Input> _inputs = [];
     private readonly RowComparer _rowComparer = new();
-    private string[] _fileNames = [];
-    private int _clipboardCount;
 
     public Form1()
     {
         InitializeComponent();
         listView1.ListViewItemSorter = _rowComparer;
     }
-
-    private string GetClipboardFileName() => $"<clipboard-{_clipboardCount}>";
 
     private void ReadStream(string fileName, Stream stream)
     {
@@ -33,20 +31,39 @@ public partial class Form1 : Form
             }
 
             ++pair.Count;
-            _ = pair.FileNames.Add(fileName);
+
+            if (!pair.FileNames.Contains(fileName))
+            {
+                pair.FileNames.Add(fileName);
+            }
+
             _counts[character] = pair;
         }
     }
 
-    private void ReadFile()
+    private void ReadInput(Input input)
     {
-        _counts.Clear();
+        string fileName;
+        Stream stream;
 
-        foreach (var fileName in _fileNames)
+        switch (input)
         {
-            using var stream = File.OpenRead(fileName);
-            ReadStream(fileName, stream);
+            case InputFile { FileName: var inputFileName }:
+                fileName = inputFileName;
+                stream = File.OpenRead(inputFileName);
+                break;
+
+            case InputText { Text: var text }:
+                fileName = $"<clipboard-{text.GetHashCode():x}>";
+                var array = Encoding.UTF8.GetBytes(Clipboard.GetText());
+                stream = new MemoryStream(array);
+                break;
+
+            default:
+                throw new UnreachableException();
         }
+
+        ReadStream(fileName, stream);
     }
 
     private void RefreshListBox()
@@ -74,15 +91,15 @@ public partial class Form1 : Form
 
     private void ClearAll()
     {
-        _clipboardCount = 0;
         _counts.Clear();
+        _inputs.Clear();
         listView1.Items.Clear();
     }
 
     private void RefreshAll()
     {
-        ClearAll();
-        ReadFile();
+        _counts.Clear();
+        _inputs.ForEach(ReadInput);
         RefreshListBox();
     }
 
@@ -97,8 +114,14 @@ public partial class Form1 : Form
 
         if (dialog.ShowDialog() == DialogResult.OK)
         {
-            _fileNames = dialog.FileNames;
-            RefreshAll();
+            foreach (var fileName in dialog.FileNames)
+            {
+                InputFile input = new(fileName);
+                _inputs.Add(input);
+                ReadInput(input);
+            }
+
+            RefreshListBox();
         }
     }
 
@@ -106,10 +129,9 @@ public partial class Form1 : Form
 
     private void PasteTextFromClipboardToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        var array = Encoding.UTF8.GetBytes(Clipboard.GetText());
-        using MemoryStream stream = new(array);
-        ReadStream(GetClipboardFileName(), stream);
-        ++_clipboardCount;
+        InputText input = new(Clipboard.GetText());
+        _inputs.Add(input);
+        ReadInput(input);
         RefreshListBox();
     }
 
